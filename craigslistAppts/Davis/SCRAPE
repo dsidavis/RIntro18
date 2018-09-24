@@ -1,0 +1,5 @@
+ff = c("scrape.R", "postInfo.R", "fixInitialPosts.R", "df.R")
+invisible(lapply(file.path("~/Data/CraigsList/R", ff), source, globalenv()))
+
+u = "https://sacramento.craigslist.org/search/apa?search_distance=8&postal=95616&availabilityMode=0&sale_date=all+dates"
+source("~/Data/CraigsList/R/scrape.R"); sac = craigslist(u, getPostInfo = NULL, save = filenameGenerator("Cache2"))

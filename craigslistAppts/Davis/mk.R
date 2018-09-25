@@ -1,7 +1,9 @@
-source("~/Data/CraigsList/R/postInfo.R")
+source("postInfo.R")
 library(XML)
 
+# Chose one of these.
 ff = list.files("Cache", pattern = "^_apa_", full = TRUE)
+# Just one day's posts.
 ff = list.files("Cache2", full = TRUE)
 
 vals = i = lapply(ff, getPostInfo)
@@ -29,8 +31,11 @@ i = i[z]
 i = lapply(i, function(x) { if(!("header" %in% names(x))) x$header = NA ; x })
 
 ii = do.call(rbind, i)
-
+class(ii)
+dim(ii)
 rownames(ii) = ii$file = basename(ff[!w][z])
+
+
 
 normalizeSpace = function(x) gsub("[[:space:]]+", " ", x)
 trim = function(x) gsub("(^[[:space:]]+|[[:space:]]+$)", "", x)
@@ -101,13 +106,15 @@ source("funs.R")
 ii$datePosted = mkDate(ii$posted)
 ii$dateUpdated = mkDate(ii$updated)
 
-ii$parking = factor(sapply(file.path("Cache2", ii$file), function(d) getParking(xpathSApply(htmlParse(d), "//p[@class = 'attrgroup']//span", xmlValue))))
-ii$laundry = factor(sapply(file.path("Cache2", ii$file), function(d) getLaundry(xpathSApply(htmlParse(d), "//p[@class = 'attrgroup']//span", xmlValue))))
-ii$type = factor(sapply(file.path("Cache2", ii$file), function(d) getAptType(xpathSApply(htmlParse(d), "//p[@class = 'attrgroup']//span", xmlValue))))
+dir = "Cache"
+ii$parking = factor(sapply(file.path(dir, ii$file), function(d) getParking(xpathSApply(htmlParse(d), "//p[@class = 'attrgroup']//span", xmlValue))))
+ii$laundry = factor(sapply(file.path(dir, ii$file), function(d) getLaundry(xpathSApply(htmlParse(d), "//p[@class = 'attrgroup']//span", xmlValue))))
+ii$type = factor(sapply(file.path(dir, ii$file), function(d) getAptType(xpathSApply(htmlParse(d), "//p[@class = 'attrgroup']//span", xmlValue))))
 
-ii$furnished = sapply(file.path("Cache2", ii$file), function(d) "furnished" %in% xpathSApply(htmlParse(d), "//p[@class = 'attrgroup']//span", xmlValue))
+ii$furnished = sapply(file.path(dir, ii$file), function(d) "furnished" %in% xpathSApply(htmlParse(d), "//p[@class = 'attrgroup']//span", xmlValue))
 
-saveRDS(ii, "DavisRaw.rds")
+#saveRDS(ii, "DavisRaw.rds")
+saveRDS(ii, "SacDavisApartments.rds")
 
 
 if(FALSE) {

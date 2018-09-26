@@ -48,8 +48,15 @@ ggplot(davis, aes(sqft, price)) + geom_point(aes(color = ordered(bath))) + labs(
 p = ggplot(davis, aes(sqft, price)) + geom_point(aes(color = ordered(bath))) + labs(color = "Bedrooms")
 
 p + facet_wrap(~ type, ncol = 3)
-
+p + facet_grid( ~ type)
 
 ggplot(davis[!is.na(davis$type),], aes(sqft, price)) + geom_point(aes(color = ordered(bath))) + labs(color = "Bedrooms") + facet_wrap(~ type, ncol = 3)
 
 
+
+# Show a smoothed average of price as sqft change.
+ggplot(davis, aes(sqft, price)) + geom_point() + geom_smooth()
+
+# Show two fitted lines, one for those units <= 2000 sqft and another for > 2000
+davis$big = davis$sqft > 2000
+ggplot(davis, aes(sqft, price)) + geom_point() + geom_smooth(method = "lm", aes(group = big))

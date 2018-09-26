@@ -57,6 +57,15 @@ ggplot(davis[!is.na(davis$type),], aes(sqft, price)) + geom_point(aes(color = or
 # Show a smoothed average of price as sqft change.
 ggplot(davis, aes(sqft, price)) + geom_point() + geom_smooth()
 
+ggplot(davis, aes(sqft, price)) + geom_point() + geom_smooth(method = "lm")
+
+# Don't show the confidence envelope
+ggplot(davis, aes(sqft, price)) + geom_point() + geom_smooth(method = "lm", se = FALSE)
+
 # Show two fitted lines, one for those units <= 2000 sqft and another for > 2000
 davis$big = davis$sqft > 2000
 ggplot(davis, aes(sqft, price)) + geom_point() + geom_smooth(method = "lm", aes(group = big))
+
+
+# Two lines - one for houses and one for the rest
+ggplot(davis, aes(sqft, price)) + geom_point() + geom_smooth(method = "lm", aes(group = type == "house"))
